@@ -1,0 +1,27 @@
+- name: Deploy TLS Certificate Report Script
+  hosts: barq_servers
+  become: yes
+  tasks:
+
+    - name: Copy cert-lite.sh to /usr/local/bin
+      copy:
+        src: files/cert-lite.sh
+        dest: /usr/local/bin/cert-lite.sh
+        mode: '0755'
+
+    - name: Ensure reports directory exists
+      file:
+        path: /var/reports
+        state: directory
+        owner: root
+        group: root
+        mode: '0755'
+
+    - name: Schedule cron job for cert-lite.sh at 07:00 daily
+      cron:
+        name: "Run cert-lite.sh daily at 07:00"
+        job: "/usr/local/bin/cert-lite.sh"
+        minute: "0"
+        hour: "7"
+        user: root
+

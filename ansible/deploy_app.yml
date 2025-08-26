@@ -1,0 +1,58 @@
+- name: Deploy BARQ Java Application
+  hosts: barq_servers
+  become: yes
+  serial: 1  # Deploy to one server at a time
+
+  tasks:
+
+    - name: Ensure release directory exists
+      file:
+        path: /opt/barq/releases/1
+        state: directory
+        owner: root
+        group: root
+        mode: '0755'
+
+    - name: Copy barq-lite.jar to release directory
+      copy:
+        src: files/barq-lite.jar
+        dest: /opt/barq/releases/1/barq-lite.jar
+        mode: '0755'
+
+    - name: Update current symlink
+      file:
+        src: /opt/barq/releases/1
+        dest: /opt/barq/current
+        state: link
+
+    - name: Create systemd service for BARQ
+      copy:
+        dest: /etc/systemd/system/barq.service
+        content: |
+          [Unit]
+          Description=BARQ Java Application
+          After=network.target
+
+          [Service]
+          Type=oneshot
+          ExecStart=/usr/bin/java -jar /opt/barq/current/barq-lite.jar
+          WorkingDirectory=/opt/barq/current
+          RemainAfterExit=yes
+          User=root
+
+          [Install]
+          WantedBy=multi-user.target
+      notify:
+        - Reload systemd
+
+    - name: Enable and start BARQ service
+      systemd:
+        name: barq
+        enabled: yes
+        state: started
+
+  handlers:
+    - name: Reload systemd
+      systemd:
+        daemon_reload: yes
+

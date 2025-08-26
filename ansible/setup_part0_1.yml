@@ -1,0 +1,76 @@
+---
+- name: Setup Part 0 and Part 1 baseline
+  hosts: barq_servers
+  become: yes
+
+  vars:
+    yesterday: "{{ lookup('pipe','date -d yesterday +%F') }}"
+    today: "{{ lookup('pipe','date +%F') }}"
+
+  tasks:
+    # 1) Ensure /var/log/barq exists
+    - name: Ensure log directory exists
+      file:
+        path: /var/log/barq
+        state: directory
+        owner: root
+        group: root
+        mode: '0755'
+
+    # 2) Ensure yesterday/today dated logs exist
+    - name: Create yesterday’s log file
+      file:
+        path: "/var/log/barq/barq-{{ yesterday }}.log"
+        state: touch
+        mode: '0644'
+
+    - name: Create today’s log file
+      file:
+        path: "/var/log/barq/barq-{{ today }}.log"
+        state: touch
+        mode: '0644'
+
+    # 3) Ensure main application log exists and is writable
+    - name: Ensure barq.log exists with open perms for demo
+      file:
+        path: /var/log/barq/barq.log
+        state: touch
+        mode: '0666'
+
+    # 4) Deploy log-lite.sh
+    - name: Copy log-lite.sh to /usr/local/bin
+      copy:
+        src: files/log-lite.sh
+        dest: /usr/local/bin/log-lite.sh
+        owner: root
+        group: root
+        mode: '0755'
+
+    # 5) Cron job at 01:10 daily
+    - name: Install cron job for log-lite.sh
+      cron:
+        name: "BARQ log compression & retention"
+        user: root
+        job: "/usr/local/bin/log-lite.sh"
+        minute: "10"
+        hour: "1"
+
+    # 6) Ensure TLS directory exists
+    - name: Ensure TLS directory exists
+      file:
+        path: /etc/ssl/patrol
+        state: directory
+        owner: root
+        group: root
+        mode: '0755'
+
+    # 7) Generate a short-lived self-signed cert if missing
+    - name: Generate self-signed cert (7 days) if missing
+      command: >
+        openssl req -x509 -nodes -newkey rsa:2048
+        -keyout /etc/ssl/patrol/barq.key
+        -out /etc/ssl/patrol/barq.crt
+        -days 7
+        -subj "/CN=barq-lite"
+      args:
+        creates: /etc/ssl/patrol/barq.crt

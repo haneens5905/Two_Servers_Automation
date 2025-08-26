@@ -1,0 +1,27 @@
+# OS / editor stuff
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+*.tmp
+~$*
+
+# IDEs
+.vscode/
+.idea/
+
+# Python (if ever used)
+__pycache__/
+*.pyc
+.venv/
+
+# Ansible artifacts
+*.retry
+
+# Logs (we don't track runtime logs from servers)
+*.log
+*.log.gz
+
+# Docker build cache (if you do the bonus)
+dist/
+build/
