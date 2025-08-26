@@ -8,7 +8,7 @@ It demonstrates **Bash scripting** and **Ansible automation** for real-world ope
 
 ---
 
-## 📑 Table of Contents
+##  Table of Contents
 1. [Overview](#overview)  
 2. [Architecture](#architecture)  
 3. [Project Description](#project-description)  
