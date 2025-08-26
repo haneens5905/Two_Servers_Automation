@@ -1,27 +1,27 @@
-# OS / editor stuff
-.DS_Store
-Thumbs.db
+# Logs
+*.log
+*.log.*
+*.gz
+
+# Reports
+/var/reports/*
+  
+# if you want to keep a sample report
+!cert-lite.txt
+
+# Certificates
+/etc/ssl/patrol/*.crt
+
+# System files
 *.swp
 *.swo
-*.tmp
-~$*
+*~
+.DS_Store
 
-# IDEs
-.vscode/
-.idea/
-
-# Python (if ever used)
+# Python cache (if you ever test with python)
 __pycache__/
 *.pyc
-.venv/
 
-# Ansible artifacts
+# Ansible cache
 *.retry
 
-# Logs (we don't track runtime logs from servers)
-*.log
-*.log.gz
-
-# Docker build cache (if you do the bonus)
-dist/
-build/
