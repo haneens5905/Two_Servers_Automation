@@ -18,15 +18,15 @@ tasks are reproducible, automated, and easy to maintain.
 
 ##  Table of Contents
 
-1.  [Overview](#overview)\
-2.  [Project Description](#project-description)\
-3.  [Prerequisites & Dependencies](#prerequisites--dependencies)\
-4.  [Assumptions](#assumptions)\
-5.  [Project Structure](#project-structure)\
-6.  [How to Run the Playbooks](#how-to-run-the-playbooks)\
-7.  [Part 1 -- Log Setup](#part-1--log-setup)\
-8.  [Part 2 -- Java App Deployment](#part-2--java-app-deployment)\
-9.  [Part 3 -- TLS Certificate Report](#part-3--tls-certificate-report)\
+1.  [Overview](#overview)
+2.  [Project Description](#project-description)
+3.  [Prerequisites & Dependencies](#prerequisites--dependencies)
+4.  [Assumptions](#assumptions)
+5.  [Project Structure](#project-structure)
+6.  [How to Run the Playbooks](#how-to-run-the-playbooks)
+7.  [Part 1 -- Log Setup](#part-1--log-setup)
+8.  [Part 2 -- Java App Deployment](#part-2--java-app-deployment)
+9.  [Part 3 -- TLS Certificate Report](#part-3--tls-certificate-report)
 10. [Verification](#verification)
 
 ------------------------------------------------------------------------
@@ -36,25 +36,25 @@ tasks are reproducible, automated, and easy to maintain.
 The **BARQ-Lite Project** automates essential system administration
 tasks using Ansible and Bash.
 
-It covers:\
-- **Log management:** Automatically rotates and compresses logs.\
-- **Application deployment:** Deploys a Java app as a managed service.\
+It covers:
+- **Log management:** Automatically rotates and compresses logs.
+- **Application deployment:** Deploys a Java app as a managed service.
 - **Security monitoring:** Reports TLS certificate expiry daily.
 
 ------------------------------------------------------------------------
 
 ##  Project Description
 
--   **Part 1 -- Log Setup:**\
+-   **Part 1 -- Log Setup:**
     Simulates a log rotation system. Logs are rotated daily, compressed,
     and archived to avoid filling up disk space.
 
--   **Part 2 -- Java App Deployment:**\
+-   **Part 2 -- Java App Deployment:**
     Demonstrates how to deploy a Java application using a release-based
     directory structure, symbolic links, and systemd service management
     for reliability.
 
--   **Part 3 -- TLS Certificate Report:**\
+-   **Part 3 -- TLS Certificate Report:**
     Provides visibility into TLS certificate expiry dates by scanning
     certificates and producing a daily report. Ensures proactive
     monitoring to prevent outages.
@@ -65,9 +65,9 @@ It covers:\
 
 ### System
 
--   Ubuntu 20.04+ (tested on Ubuntu 20.04)\
--   Bash shell (default)\
--   cron (default on Ubuntu)\
+-   Ubuntu 20.04+ (tested on Ubuntu 20.04)
+-   Bash shell (default)
+-   cron (default on Ubuntu)
 -   systemd (default on Ubuntu)
 
 ### Packages
@@ -96,12 +96,12 @@ sudo apt install ansible openjdk-17-jdk openssl -y
     192.168.1.8
     ```
 
--   SSH access is set up for Ansible (via password or SSH key).\
+-   SSH access is set up for Ansible (via password or SSH key).
 
 -   Java JAR file (`barq-lite.jar`) is provided in the `files/`
-    directory.\
+    directory.
 
--   TLS certificates are stored in `/etc/ssl/patrol/*.crt`.\
+-   TLS certificates are stored in `/etc/ssl/patrol/*.crt`.
 
 -   All scripts are placed in `/usr/local/bin` and set as executable.
 
@@ -113,16 +113,17 @@ sudo apt install ansible openjdk-17-jdk openssl -y
     │
     ├── ansible/
     │   ├── inventory.txt
-    │   ├── playbooks/
-    │   │   ├── log_setup.yml
-    │   │   ├── java_deploy.yml
-    │   │   └── cert_report.yml
+    │   ├── java_deploy.yml
+    │   ├── log_setup.yml
+    │   ├── cert_report.yml
     │   └── files/
     │       ├── log-lite.sh
     │       ├── barq-lite.jar
-    │       └── cert-lite.sh
-    │
-    └── verify_barq.sh   # Verification script
+    │       ├── cert-lite.sh
+    │       └── verify_barq.sh   # Verification script
+    ├── .gitignore
+    ├── README.md
+    └── 
 
 ------------------------------------------------------------------------
 
@@ -158,17 +159,17 @@ ansible-playbook -i inventory.txt playbooks/cert_report.yml --ask-become-pass
 
 ##  Part 1 -- Log Setup
 
-**Description:**\
+**Description:**
 Implements automated log rotation and archiving to simulate log
 lifecycle management.
 
--   **Script:** `log-lite.sh`\
+-   **Script:** `log-lite.sh`
 
--   **Location:** `/usr/local/bin/log-lite.sh`\
+-   **Location:** `/usr/local/bin/log-lite.sh`
 
 -   **Behavior:**
 
-    -   Rotates `/var/log/barq.log` daily.\
+    -   Rotates `/var/log/barq.log` daily.
     -   Archives logs into `/var/log/barq-YYYY-MM-DD.log.gz`.
 
 -   **Cron job:**
@@ -179,15 +180,15 @@ lifecycle management.
 
 ##  Part 2 -- Java App Deployment
 
-**Description:**\
+**Description:**
 Deploys a Java application with a versioned release structure and runs
 it as a systemd service.
 
--   **Deployment Path:** `/opt/barq/releases/<version>`\
+-   **Deployment Path:** `/opt/barq/releases/<version>`
 
--   **Symlink:** `/opt/barq/current` → active release.\
+-   **Symlink:** `/opt/barq/current` → active release.
 
--   **Systemd Service:** `/etc/systemd/system/barq.service`\
+-   **Systemd Service:** `/etc/systemd/system/barq.service`
 
 -   **Executes:**
 
@@ -207,24 +208,24 @@ it as a systemd service.
 
 ##  Part 3 -- TLS Certificate Report
 
-**Description:**\
+**Description:**
 Provides proactive monitoring of certificate expiry dates by scanning
 certificates in `/etc/ssl/patrol`.
 
--   **Script:** `cert-lite.sh`\
+-   **Script:** `cert-lite.sh`
 
--   **Location:** `/usr/local/bin/cert-lite.sh`\
+-   **Location:** `/usr/local/bin/cert-lite.sh`
 
 -   **Behavior:**
 
-    -   Scans `/etc/ssl/patrol/*.crt`.\
-    -   Extracts `NotAfter` field.\
-    -   Calculates days until expiry.\
-    -   Outputs `/var/reports/cert-lite.txt`.
+    -   Scans `/etc/ssl/patrol/*.crt`.
+    -   Extracts `NotAfter` field.
+    -   Calculates days until expiry.
+    -   Outputs `/var/reports/cert-lite.txt`
 
 -   **Sample Output:**
 
-        cert_name | NotAfter_date | days_remaining
+        cert_name     | NotAfter_date            | days_remaining
         barq-3day.crt | Aug 27 12:30:14 2025 GMT | 1
         barq.crt      | Aug 31 13:22:44 2025 GMT | 5
 
@@ -242,6 +243,7 @@ A helper script `verify_barq.sh` is provided to confirm the setup. Run:
 ./verify_barq.sh
 ```
 
-It checks: - Log rotation script + cron\
-- Java app deployment + systemd service\
+It checks: 
+- Log rotation script + cron
+- Java app deployment + systemd service
 - TLS certificate report + cron
