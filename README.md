@@ -5,9 +5,9 @@ demonstrates skills in **Bash scripting** and **Ansible automation**.\
 It simulates real-world operations tasks: managing logs, deploying
 applications, and monitoring TLS certificates.
 
-The project consists of **three main parts**:\
-1. Automated Log Setup and Rotation\
-2. Java Application Deployment with systemd\
+The project consists of **three main parts**:
+1. Automated Log Setup and Rotation
+2. Java Application Deployment with systemd
 3. TLS Certificate Reporting with cron
 
 By combining Bash scripts and Ansible playbooks, this project ensures
