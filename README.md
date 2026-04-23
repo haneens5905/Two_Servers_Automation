@@ -1,4 +1,4 @@
-# BARQ Lite – Two Servers Automation Project
+# Two Servers Automation Project
 
 The **Two Servers Automation** is a DevOps automation challenge completed during my internship at **BARQ Systems**.  
 It demonstrates **Bash scripting** and **Ansible automation** for real-world operational tasks:
